@@ -8,7 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // Esta es la estructura que Vercel espera para sus funciones serverless
 module.exports = async (req, res) => {
 
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173/Portafolio/');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
