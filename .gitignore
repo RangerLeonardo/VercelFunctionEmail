@@ -1,0 +1,10 @@
+# Ignorar la carpeta de módulos de Node
+node_modules/
+
+# Ignorar archivo de entorno
+.env
+
+# Ignorar archivos y carpetas específicas de Vercel (si los usaras localmente)
+.vercel/
+
+package-lock.json
