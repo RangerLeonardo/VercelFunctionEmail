@@ -33,11 +33,11 @@ module.exports = async (req, res) => {
     }
 
     // --- ¡CAMBIOS AQUÍ! Extraer los datos con los nombres de tu formulario React ---
-    const { nombre, apellidos, asunto, correo, empresa, mensaje } = data;
+    const { nombre, apellidos, asunto, email, empresa, mensaje } = data;
 
     // Validación básica (ajustada a los nuevos nombres)
-    if (!nombre || !apellidos || !asunto || !correo || !mensaje) { // 'empresa' es opcional
-        res.status(400).json({ message: 'Por favor, completa los campos requeridos (Nombre, Apellidos, Asunto, Correo, Mensaje).' });
+    if (!nombre || !apellidos || !asunto || !email || !mensaje) { // 'empresa' es opcional
+        res.status(400).json({ message: 'Por favor, completa los campos requeridos (Nombre, Apellidos, Asunto, email, Mensaje).' });
         return;
     }
 
@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
             html: `
                 <p>Has recibido un nuevo mensaje desde el formulario de contacto de tu portafolio:</p>
                 <p><strong>Nombre Completo:</strong> ${nombre} ${apellidos}</p>
-                <p><strong>Correo Electrónico:</strong> ${correo}</p>
+                <p><strong>Correo Electrónico:</strong> ${email}</p>
                 <p><strong>Asunto:</strong> ${asunto}</p>
                 ${empresa ? `<p><strong>Empresa:</strong> ${empresa}</p>` : ''} {/* Condicional para empresa */}
                 <p><strong>Mensaje:</strong></p>
