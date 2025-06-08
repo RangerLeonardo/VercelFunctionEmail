@@ -7,6 +7,18 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Esta es la estructura que Vercel espera para sus funciones serverless
 module.exports = async (req, res) => {
+    https://rangerleonardo.github.io/Portafolio/
+
+    res.setHeader('Access-Control-Allow-Origin', 'https://rangerleonardo.github.io/Portafolio/');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Manejo de la solicitud "preflight" (OPTIONS)
+    if (req.method === 'OPTIONS') {
+        res.status(200).end(); // Responder con éxito a la preflight y terminar
+        return;
+    }
+
     if (req.method !== 'POST') {
         res.status(405).setHeader('Allow', 'POST').json({ message: 'Método no permitido' });
         return;
