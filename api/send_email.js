@@ -7,7 +7,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Esta es la estructura que Vercel espera para sus funciones serverless
 module.exports = async (req, res) => {
-    // Solo aceptar solicitudes POST
     if (req.method !== 'POST') {
         res.status(405).setHeader('Allow', 'POST').json({ message: 'Método no permitido' });
         return;
@@ -15,7 +14,6 @@ module.exports = async (req, res) => {
 
     let data;
     try {
-        // Vercel automáticamente parsea el cuerpo de la solicitud JSON si el Content-Type es application/json
         data = req.body;
     } catch (error) {
         console.error('Error parsing JSON:', error);
@@ -23,34 +21,35 @@ module.exports = async (req, res) => {
         return;
     }
 
-    const { name, email, message } = data;
+    // --- ¡CAMBIOS AQUÍ! Extraer los datos con los nombres de tu formulario React ---
+    const { nombre, apellidos, asunto, correo, empresa, mensaje } = data;
 
-    // Validación básica de los datos recibidos
-    if (!name || !email || !message) {
-        res.status(400).json({ message: 'Por favor, completa todos los campos del formulario.' });
+    // Validación básica (ajustada a los nuevos nombres)
+    if (!nombre || !apellidos || !asunto || !correo || !mensaje) { // 'empresa' es opcional
+        res.status(400).json({ message: 'Por favor, completa los campos requeridos (Nombre, Apellidos, Asunto, Correo, Mensaje).' });
         return;
     }
 
     try {
-        // Envío del correo con Resend
         const emailResponse = await resend.emails.send({
-            // ¡IMPORTANTE! Para pruebas, puedes usar 'onboarding@resend.dev'.
-            // Para producción, cambia a un dominio que hayas VERIFICADO en Resend (ej. 'contacto@tudominio.com')
-            from: 'Tu Nombre <onboarding@resend.dev>',
-            to: 'brandonleonardobarrera@gmail.com', // ¡Tu correo personal donde quieres recibir los mensajes!
-            subject: `Nuevo mensaje de ${name} desde tu portafolio`,
+            from: 'Tu Portafolio <portafolioBLAB@resend.dev>',
+            to: 'brandonleonardobarrera@gmail.com',
+            subject: `Mensaje de Contacto - ${asunto} de ${nombre} ${apellidos}`, // Asunto más detallado
             html: `
-                <p>Has recibido un nuevo mensaje desde tu portafolio:</p>
-                <p><strong>Nombre:</strong> ${name}</p>
-                <p><strong>Email del remitente:</strong> <span class="math-inline">\{email\}</p\>
+                <p>Has recibido un nuevo mensaje desde el formulario de contacto de tu portafolio:</p>
+                <p><strong>Nombre Completo:</strong> ${nombre} ${apellidos}</p>
+                <p><strong>Correo Electrónico:</strong> ${correo}</p>
+                <p><strong>Asunto:</strong> ${asunto}</p>
+                ${empresa ? `<p><strong>Empresa:</strong> ${empresa}</p>` : ''} {/* Condicional para empresa */}
                 <p><strong>Mensaje:</strong></p>
-<p>{message}</p>
-<br>
-<p>---</p>
-<p>Este correo fue enviado desde tu formulario de contacto.</p>
-`,
-});
-  console.log('Email enviado con éxito:', emailResponse);
+                <p>${mensaje}</p>
+                <br>
+                <p>---</p>
+                <p>Este correo fue enviado desde tu formulario de contacto.</p>
+            `,
+        });
+
+        console.log('Email enviado con éxito:', emailResponse);
         res.status(200).json({ message: 'Mensaje enviado con éxito', id: emailResponse.id });
 
     } catch (error) {
