@@ -1,0 +1,2 @@
+# VercelFunctionEmail
+Magic
