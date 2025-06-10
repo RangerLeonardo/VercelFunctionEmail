@@ -1,14 +1,12 @@
 import { Resend } from 'resend';
 // api/send-email.js
 
-// La clave de API de Resend NO debe estar aquí directamente.
-// Vercel la inyectará a través de una variable de entorno.
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Esta es la estructura que Vercel espera para sus funciones serverless
 module.exports = async (req, res) => {
 
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Origin', 'https://rangerleonardo.github.io'); // Cambia esto al dominio de tu portafolio o al localhost para pruebas
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -35,6 +33,12 @@ module.exports = async (req, res) => {
     // --- ¡CAMBIOS AQUÍ! Extraer los datos con los nombres de tu formulario React ---
     const { nombre, apellidos, asunto, email, empresa, mensaje } = data;
 
+    if (atack && atack.trim().length > 0) {
+        console.error('Atack detected:', atack);
+        res.status(400).json({ message: 'No se ha podido establecer conexión, verifica la información.' });
+        return;
+    }
+
     // Validación básica (ajustada a los nuevos nombres)
     if (!nombre || !apellidos || !asunto || !email || !mensaje) { // 'empresa' es opcional
         res.status(400).json({ message: 'Por favor, completa los campos requeridos (Nombre, Apellidos, Asunto, email, Mensaje).' });
@@ -51,12 +55,12 @@ module.exports = async (req, res) => {
                 <p><strong>Nombre Completo:</strong> ${nombre} ${apellidos}</p>
                 <p><strong>Correo Electrónico:</strong> ${email}</p>
                 <p><strong>Asunto:</strong> ${asunto}</p>
-                ${empresa ? `<p><strong>Empresa:</strong> ${empresa}</p>` : ''} {/* Condicional para empresa */}
+                ${empresa ? `<p><strong>Empresa:</strong> ${empresa}</p>` : ''}
                 <p><strong>Mensaje:</strong></p>
                 <p>${mensaje}</p>
                 <br>
                 <p>---</p>
-                <p>Este correo fue enviado desde tu formulario de contacto.</p>
+                <p>Este correo fue enviado desde tu formulario de contacto del portafolio.</p>
             `,
         });
 
