@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
     }
 
     // --- ¡CAMBIOS AQUÍ! Extraer los datos con los nombres de tu formulario React ---
-    const { nombre, apellidos, asunto, email, empresa, mensaje } = data;
+    const { nombre, apellidos, asunto, email, empresa, mensaje, atack } = data;
 
     if (atack && atack.trim().length > 0) {
         console.error('Atack detected:', atack);
